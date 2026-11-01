@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Documentation &amp; Code | Discount Bond Database</title>
+<meta name="description" content="Government zero-coupon yield curve estimates for six major government bond markets.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<!-- Google Analytics: set GA_MEASUREMENT_ID in build.py at go-live. -->
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="index.html">Discount Bond Database</a>
+    <div class="tagline">Government zero-coupon yield curves for six major government bond markets</div>
+  </div>
+  <nav class="main" aria-label="Main">
+    <div class="wrap">
+      <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="united-states.html">United States</a></li>
+      <li><a href="germany.html">Germany</a></li>
+      <li><a href="japan.html">Japan</a></li>
+      <li><a href="united-kingdom.html">United Kingdom</a></li>
+      <li><a href="canada.html">Canada</a></li>
+      <li><a href="switzerland.html">Switzerland</a></li>
+      <li><a href="methodology.html" aria-current="page">Data &amp; Code</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1 class="page">Data Documentation &amp; Code</h1>
+    <div class="pagenav">
+      <div class="nrow"><span class="lab">Data docs</span>
+        <span class="items"><a href="#conventions">Conventions</a> &middot;
+        <a href="#sources">Sources &amp; sample construction</a></span></div>
+      <div class="nrow"><span class="lab">Reference</span>
+        <span class="items"><a href="#code">Code</a> &middot;
+        <a href="#cite">Papers &amp; citations</a></span></div>
+    </div>
+
+    <h2 id="conventions">Terms and conventions</h2>
+    <p>All yield files begin with <code>date</code> and the three coverage fields, followed by one
+    column per maturity. Daily-maturity files use <code>_days</code>; monthly-maturity files use
+    <code>_months</code>.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>date</code></td><td>Observation date (<code>YYYY-MM-DD</code>)</td></tr>
+          <tr><td><code>min_observed_ttm_days</code> / <code>_months</code></td>
+              <td>Shortest remaining maturity in that day's fitted bond cross-section</td></tr>
+          <tr><td><code>max_observed_ttm_days</code> / <code>_months</code></td>
+              <td>Longest remaining maturity in that cross-section</td></tr>
+          <tr><td><code>max_curve_ttm_days</code> / <code>_months</code></td>
+              <td>Last maturity with a published curve value on that date</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px">Monthly-observation files use the last available published date of each
+    calendar month; monthly-maturity files report maturities
+    <a href="faq.html#monthly-maturities">in months</a>. For standalone
+    <a href="details-kr-yields.html">KR</a> in Germany, Japan, the United Kingdom, Canada and
+    Switzerland, <code>max_curve_ttm_days</code> / <code>_months</code> coincides with
+    <code>max_observed_ttm_days</code> / <code>_months</code>.
+    <a href="details-krt-yields.html">KR-T</a> for those markets may extend further, where an
+    FX-transformed U.S. Treasury reaches beyond the longest domestic bond. For
+    <a href="details-us-yields.html">U.S. KR</a>, <code>max_curve_ttm_days</code> / <code>_months</code>
+    follows the publication horizon and therefore need not coincide with
+    <code>max_observed_ttm_days</code> / <code>_months</code>.</p>
+
+    <h2 id="sources">Data sources and sample construction</h2>
+    <h3>Sources</h3>
+    <p>U.S. Treasury data come from the CRSP Treasuries Time Series. Government bond data for Germany,
+    Japan, the United Kingdom, Canada, and Switzerland, together with the corresponding FX spot and
+    forward rates, come from Bloomberg using the composite BGN pricing source.</p>
+
+    <h3>Bond filters</h3>
+    <ul class="bullets">
+      <li>Bonds within about three months of maturity excluded, on liquidity grounds</li>
+      <li>Callable / sinkable / puttable / perpetual / convertible / floating-rate / fungible securities
+      excluded</li>
+      <li>Outlier quotes excluded, where the yield deviates sharply from that day's cross-sectional
+      median</li>
+      <li>U.S. on-the-run issues excluded, for their liquidity and specialness</li>
+      <li>U.K. gilts excluded within the ex-dividend window before a coupon date, where accrued interest
+      turns negative, and during partly-paid issuance periods</li>
+      <li>Swiss Treasury bills excluded, as the source returns almost no quotes for them</li>
+    </ul>
+
+    <h3 id="coverage">Coverage and date inclusion</h3>
+    <p>International KR panels exclude domestic Bloomberg holidays and dates with fewer than five
+    domestic bonds. KR-T additionally requires U.S. reference data and FX spot and forward data. For
+    date-level bond counts, observed maturity coverage, and the reason a date is included or excluded,
+    see the bond coverage detail files below.</p>
+    <div class="files compact">
+      <div class="row"><span class="name">Germany</span><span class="fmt"><a href="https://drive.google.com/file/d/1q2ZY0nwiA2HdUCJqA5kNCY_uSxZqOW-d/view?usp=sharing">CSV</a></span></div>
+      <div class="row"><span class="name">Japan</span><span class="fmt"><a href="https://drive.google.com/file/d/1D5YvOj9vHRmb5fZToBbPIJh5gl9N_Irj/view?usp=sharing">CSV</a></span></div>
+      <div class="row"><span class="name">United Kingdom</span><span class="fmt"><a href="https://drive.google.com/file/d/1GoHVzKus0BaLZlz-zW338FD_rQPd_nOJ/view?usp=sharing">CSV</a></span></div>
+      <div class="row"><span class="name">Canada</span><span class="fmt"><a href="https://drive.google.com/file/d/1FJwiiYXRZg-jOeSLi_X_cVuthyhKJ9pp/view?usp=sharing">CSV</a></span></div>
+      <div class="row"><span class="name">Switzerland</span><span class="fmt"><a href="https://drive.google.com/file/d/1LJJwV8ZjqULUL3U8TNq5NGI6V0FDWWNc/view?usp=sharing">CSV</a></span></div>
+    </div>
+    <details class="fields">
+      <summary>Field definitions</summary>
+      <div class="body">
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td><code>date</code></td><td>Observation date (<code>YYYY-MM-DD</code>)</td></tr>
+              <tr><td><code>n_bonds</code></td><td>Bonds entering that day's fitted cross-section, after
+                  the screens above</td></tr>
+              <tr><td><code>min_observed_ttm_days</code></td><td>Shortest remaining maturity among those bonds</td></tr>
+              <tr><td><code>max_observed_ttm_days</code></td><td>Longest remaining maturity among those bonds</td></tr>
+              <tr><td><code>kr_status</code></td><td>Whether the date is included in the KR panel.
+                  Values: <span class="stat" tabindex="0" aria-describedby="def-published" data-tip="Included in panel">published</span>, <span class="stat" tabindex="0" aria-describedby="def-holiday" data-tip="Domestic Bloomberg holiday">holiday</span>, <span class="stat" tabindex="0" aria-describedby="def-few_bonds" data-tip="&lt; 5 domestic bonds">few_bonds</span></td></tr>
+              <tr><td><code>krt_status</code></td><td>Whether the date is included in the KR-T panel.
+                  Values: <span class="stat" tabindex="0" aria-describedby="def-published" data-tip="Included in panel">published</span>, <span class="stat" tabindex="0" aria-describedby="def-holiday" data-tip="Domestic Bloomberg holiday">holiday_domestic</span>, <span class="stat" tabindex="0" aria-describedby="def-few_bonds" data-tip="&lt; 5 domestic bonds">few_bonds</span>, <span class="stat" tabindex="0" aria-describedby="def-no_us_data" data-tip="U.S. holiday or market closure">no_us_data</span>, <span class="stat" tabindex="0" aria-describedby="def-no_fx_spot" data-tip="FX spot unavailable">no_fx_spot</span>, <span class="stat" tabindex="0" aria-describedby="def-no_fx_forward" data-tip="FX forward unavailable">no_fx_forward</span>, <span class="stat" tabindex="0" aria-describedby="def-fx_input_inadequate" data-tip="FX quotes inadequate">fx_input_inadequate</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="defs">
+          <li id="def-published"><code>published</code>: the date is in that panel.</li>
+          <li id="def-holiday"><code>holiday</code> (KR) / <code>holiday_domestic</code> (KR-T):
+          Bloomberg holiday in the domestic market.</li>
+          <li id="def-few_bonds"><code>few_bonds</code>: fewer than five domestic bonds that day.</li>
+          <li id="def-no_us_data"><code>no_us_data</code>: U.S. reference data unavailable, a U.S.
+          holiday or market closure.</li>
+          <li id="def-no_fx_spot"><code>no_fx_spot</code>: FX spot rate missing although forwards
+          exist.</li>
+          <li id="def-no_fx_forward"><code>no_fx_forward</code>: no FX forward quote for that currency
+          that day.</li>
+          <li id="def-fx_input_inadequate"><code>fx_input_inadequate</code>: the observed FX quotes do
+          not support the short end (0.06% of KR-T dates).
+          <a href="faq.html#krt-date-range">How these quotes are identified &rarr;</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <h2 id="code">Code</h2>
+    <div class="files">
+      <div class="row"><span class="name">U.S. discount curve and yield estimation</span>
+        <span class="fmt"><a href="https://github.com/yye9701/KR_example">github.com/yye9701/KR_example</a></span></div>
+      <div class="row"><span class="name">U.S. returns and factor estimation</span>
+        <span class="fmt"><a href="https://github.com/rosieiiiii/KR_return_example">github.com/rosieiiiii/KR_return_example</a></span></div>
+      <div class="row"><span class="name">International KR and KR-T estimation</span>
+        <span class="fmt" style="color:var(--faint)">Coming soon</span></div>
+    </div>
+
+    <h2 id="cite">Papers and how to cite</h2>
+    <p>The data are free to use, provided the corresponding paper is cited.</p>
+    <details id="paper-kr" style="margin-top:18px">
+      <summary>Stripping the Discount Curve - a Robust Machine Learning Approach</summary>
+      <div class="body">
+        <p class="cite">Damir Filipovic, Markus Pelger &amp; Ye Ye · <em>Management Science</em> 72(9), 8057-8120, 2026</p>
+        <p>Introduces the kernel ridge regression approach to discount curve estimation. Methodology for
+        the KR yield curves and the risk-free return.</p>
+        <p class="citelinks"><a href="https://doi.org/10.1287/mnsc.2023.01401">DOI</a> &middot;
+        <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4058150">SSRN</a> &middot;
+        <button type="button" class="copy" data-cite="paper-kr" data-kind="text">Copy citation</button> &middot;
+        <button type="button" class="copy" data-cite="paper-kr" data-kind="bibtex">BibTeX</button></p>
+      </div>
+    </details>
+    <details id="paper-factors">
+      <summary>Shrinking the Term Structure</summary>
+      <div class="body">
+        <p class="cite">Damir Filipovic, Markus Pelger &amp; Ye Ye · <em>Review of Finance</em>, advance article, 2026</p>
+        <p>Unifies curve estimation with cross-sectional factor modelling and identifies a fourth
+        complexity factor. Methodology for the U.S. discount bond returns, term structure factors and
+        bond market condition measures.</p>
+        <p class="citelinks"><a href="https://doi.org/10.1093/rof/rfag033">DOI</a> &middot;
+        <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4182649">SSRN</a> &middot;
+        <button type="button" class="copy" data-cite="paper-factors" data-kind="text">Copy citation</button> &middot;
+        <button type="button" class="copy" data-cite="paper-factors" data-kind="bibtex">BibTeX</button></p>
+      </div>
+    </details>
+    <details id="paper-krt">
+      <summary>Stripping Discount Curves Across Currencies: Transfer Learning from US Treasuries</summary>
+      <div class="body">
+        <p class="cite">Damir Filipovic, Markus Pelger &amp; Rose Wang · Working paper, 2026</p>
+        <p>Extends KR to six government bond markets and introduces KR-T, which carries information from
+        data-rich to data-poor markets through FX forwards. Methodology for the international KR and
+        KR-T yield curves.</p>
+        <p class="citelinks"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7092381">SSRN</a> &middot;
+        <button type="button" class="copy" data-cite="paper-krt" data-kind="text">Copy citation</button> &middot;
+        <button type="button" class="copy" data-cite="paper-krt" data-kind="bibtex">BibTeX</button></p>
+      </div>
+    </details>
+    <p style="margin-top:16px"><a href="citations.bib" download>Download all three citations as BibTeX (citations.bib) &rarr;</a></p>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap inner">
+    <span>Discount Bond Database</span>
+    <span><a href="methodology.html">Data &amp; Code</a> · <a href="faq.html">FAQ</a> · <a href="methodology.html#cite">How to cite</a> · Contact: <a href="mailto:mpelger@stanford.edu">mpelger@stanford.edu</a></span>
+    
+  </div>
+</footer>
+<script>
+window.__CITES = {"paper-kr": {"text": "Filipovic, D., M. Pelger, and Y. Ye (2026). Stripping the Discount Curve — A Robust Machine Learning Approach. Management Science 72(9), 8057–8120. https://doi.org/10.1287/mnsc.2023.01401", "bibtex": "@article{FilipovicPelgerYe2026Stripping,\n  author  = {Filipovic, Damir and Pelger, Markus and Ye, Ye},\n  title   = {Stripping the Discount Curve---{A} Robust Machine Learning Approach},\n  journal = {Management Science},\n  year    = {2026},\n  volume  = {72},\n  number  = {9},\n  pages   = {8057--8120},\n  doi     = {10.1287/mnsc.2023.01401}\n}", "doi": "10.1287/mnsc.2023.01401", "ssrn": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4058150"}, "paper-factors": {"text": "Filipovic, D., M. Pelger, and Y. Ye (2026). Shrinking the Term Structure. Review of Finance, advance article. https://doi.org/10.1093/rof/rfag033", "bibtex": "@article{FilipovicPelgerYe2026Shrinking,\n  author  = {Filipovic, Damir and Pelger, Markus and Ye, Ye},\n  title   = {Shrinking the Term Structure},\n  journal = {Review of Finance},\n  year    = {2026},\n  note    = {Advance article},\n  doi     = {10.1093/rof/rfag033}\n}", "doi": "10.1093/rof/rfag033", "ssrn": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4182649"}, "paper-krt": {"text": "Filipovic, D., M. Pelger, and R. Wang (2026). Stripping Discount Curves Across Currencies: Transfer Learning from US Treasuries. Working paper. https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7092381", "bibtex": "@unpublished{FilipovicPelgerWang2026Transfer,\n  author  = {Filipovic, Damir and Pelger, Markus and Wang, Rose},\n  title   = {Stripping Discount Curves Across Currencies: Transfer Learning from {US} Treasuries},\n  year    = {2026},\n  note    = {Working paper},\n  url     = {https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7092381}\n}", "ssrn": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7092381"}};
+(function () {
+  var userMoved = false;
+  ['wheel', 'touchstart', 'keydown'].forEach(function (t) {
+    window.addEventListener(t, function () { userMoved = true; }, { passive: true, once: true });
+  });
+  function reveal() {
+    if (location.hash.length < 2) return;
+    var el;
+    try { el = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (e) { return; }
+    if (!el) return;
+    var d = el.closest('details');
+    while (d) { d.open = true; d = d.parentElement ? d.parentElement.closest('details') : null; }
+    el.scrollIntoView();
+  }
+  window.addEventListener('hashchange', function () { userMoved = false; reveal(); });
+  /* Copy citation / BibTeX */
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('button.copy') : null;
+    if (!b) return;
+    var rec = (window.__CITES || {})[b.dataset.cite];
+    var text = rec ? rec[b.dataset.kind] : '';
+    if (!text) return;
+    var done = function () {
+      if (b.dataset.quiet === '1') {           /* icon button: keep the icon, flag it instead */
+        b.classList.add('ok');
+        setTimeout(function () { b.classList.remove('ok'); }, 1500);
+        return;
+      }
+      var was = b.textContent;
+      b.textContent = 'Copied';
+      b.classList.add('ok');
+      setTimeout(function () { b.textContent = was; b.classList.remove('ok'); }, 1500);
+    };
+    var fallback = function () {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (err) {}
+      document.body.removeChild(ta);
+      if (ok) done();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+  });
+  /* ---- inline dataset citation: one popover, reused by every Cite button ---- */
+  (function () {
+    var pop, backdrop, trigger = null, kinds = [], active = 0;
+    var LABEL = { bibtex: 'BibTeX', doi: 'DOI', ssrn: 'SSRN' };
+    var COPY_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' +
+      '<rect x="5.6" y="5.6" width="8.2" height="8.8" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.3"/>' +
+      '<path d="M10.6 3.6H3.7a1.5 1.5 0 0 0-1.5 1.5v6.9" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+    var EXT_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' +
+      '<path d="M6.5 3.5h-3v9h9v-3M9.5 3.5h3v3M12.5 3.5 7 9"/></svg>';
+    function esc(t) {
+      return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;');
+    }
+    function isSheet() { return window.matchMedia('(max-width:620px)').matches; }
+    function rec() { return (window.__CITES || {})[trigger.dataset.cite] || {}; }
+
+    function build() {
+      if (pop) return;
+      backdrop = document.createElement('div');
+      backdrop.className = 'citebd';
+      backdrop.hidden = true;
+      backdrop.addEventListener('click', close);
+      document.body.appendChild(backdrop);
+
+      pop = document.createElement('div');
+      pop.className = 'citepop';
+      pop.hidden = true;
+      pop.setAttribute('role', 'dialog');
+      pop.setAttribute('aria-label', 'Cite this dataset');
+      pop.innerHTML = '<div class="cp-in">' +
+        '<div class="cp-head"><span>Cite this dataset</span>' +
+        '<button type="button" class="cp-x" aria-label="Close">×</button></div>' +
+        '<div class="cp-tabs" role="tablist" aria-label="Citation format"></div>' +
+        '<div class="cp-body"></div></div>';
+      document.body.appendChild(pop);
+      pop.querySelector('.cp-x').addEventListener('click', close);
+      pop.querySelector('.cp-tabs').addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (b) select(+b.dataset.i);
+      });
+      pop.querySelector('.cp-tabs').addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        e.preventDefault();
+        select((active + d + kinds.length) % kinds.length, true);
+      });
+    }
+
+    function panel(kind) {
+      var r = rec(), key = esc(trigger.dataset.cite);
+      var btn = function (k, what) {
+        return '<button type="button" class="copy ic" data-cite="' + key + '" data-kind="' + k +
+               '" data-quiet="1" aria-label="Copy ' + what + '">' + COPY_SVG + '</button>';
+      };
+      if (kind === 'bibtex') {
+        return '<div class="cp-wrap"><pre class="cp-pre">' + esc(r.bibtex) + '</pre>' +
+               btn('bibtex', 'BibTeX entry') + '</div>';
+      }
+      var url = kind === 'doi' ? 'https://doi.org/' + r.doi : r.ssrn;
+      return '<div class="cp-lab">' + LABEL[kind] + '</div>' +
+             '<div class="cp-wrap"><div class="cp-val">' + esc(r[kind]) + '</div>' +
+             btn(kind, LABEL[kind]) + '</div>' +
+             '<a class="cp-link" href="' + esc(url) + '" target="_blank" rel="noopener">' +
+             esc(url) + EXT_SVG + '</a>';
+    }
+
+    function select(i, focus) {
+      active = i;
+      var tabs = pop.querySelectorAll('.cp-tabs button');
+      for (var n = 0; n < tabs.length; n++) {
+        tabs[n].setAttribute('aria-selected', n === i ? 'true' : 'false');
+        tabs[n].tabIndex = n === i ? 0 : -1;
+      }
+      var body = pop.querySelector('.cp-body');
+      body.innerHTML = '<div class="cp-panel" role="tabpanel" tabindex="0" aria-labelledby="' +
+                       tabs[i].id + '">' + panel(kinds[i]) + '</div>';
+      if (focus) tabs[i].focus();
+    }
+
+    function place() {
+      if (isSheet()) {
+        pop.classList.add('sheet');
+        pop.style.left = pop.style.top = '';
+        backdrop.hidden = false;
+        return;
+      }
+      pop.classList.remove('sheet');
+      backdrop.hidden = true;
+      var r = trigger.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+      var docW = document.documentElement.clientWidth;
+      var left = Math.min(Math.max(12, r.left), docW - w - 12) + window.pageXOffset;
+      var top = (r.bottom + 8 + h > window.innerHeight && r.top - 8 - h > 0)
+        ? r.top - h - 8 : r.bottom + 8;
+      pop.style.left = left + 'px';
+      pop.style.top = (top + window.pageYOffset) + 'px';
+    }
+
+    function open(btn) {
+      build();
+      if (trigger === btn && !pop.hidden) { close(); return; }
+      trigger = btn;
+      var r = rec();
+      kinds = ['bibtex', 'doi', 'ssrn'].filter(function (k) { return r[k]; });
+      var tabs = pop.querySelector('.cp-tabs'), html = '';
+      for (var i = 0; i < kinds.length; i++) {
+        html += '<button type="button" role="tab" id="cp-tab-' + kinds[i] + '" data-i="' + i +
+                '" aria-selected="false" tabindex="-1">' + LABEL[kinds[i]] + '</button>';
+      }
+      tabs.innerHTML = html;
+      pop.hidden = false;
+      select(0);
+      place();
+      btn.setAttribute('aria-expanded', 'true');
+      pop.querySelector('.cp-tabs button').focus();
+    }
+
+    function close() {
+      if (!pop || pop.hidden) return;
+      pop.hidden = true;
+      backdrop.hidden = true;
+      if (trigger) {
+        trigger.setAttribute('aria-expanded', 'false');
+        if (pop.contains(document.activeElement) || document.activeElement === document.body) {
+          trigger.focus();
+        }
+      }
+      trigger = null;
+    }
+
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.cite-btn') : null;
+      if (b) { e.preventDefault(); open(b); return; }
+      if (pop && !pop.hidden && !pop.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') close();
+    });
+    window.addEventListener('resize', function () { if (pop && !pop.hidden) place(); });
+  })();
+  /* status tooltips: hover and keyboard focus are pure CSS; a tap toggles, and a tap elsewhere
+     or Escape closes. */
+  document.addEventListener('click', function (e) {
+    var t = e.target && e.target.closest ? e.target.closest('.stat') : null;
+    var open = document.querySelectorAll('.stat.on');
+    for (var i = 0; i < open.length; i++) { if (open[i] !== t) open[i].classList.remove('on'); }
+    if (t) { t.classList.toggle('on'); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var open = document.querySelectorAll('.stat.on');
+    for (var i = 0; i < open.length; i++) { open[i].classList.remove('on'); }
+  });
+  reveal();
+  /* fonts and images can shift the page after the first pass, so land it again unless the
+     reader has already started scrolling */
+  window.addEventListener('load', function () { if (!userMoved) reveal(); });
+})();
+</script>
+</body>
+</html>

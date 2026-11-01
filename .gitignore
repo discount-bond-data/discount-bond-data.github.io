@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Public repository for discount-bond-data.org.
+# Only the website itself belongs here. Anything for internal review, project
+# tracking, or data preparation stays local.
+# ---------------------------------------------------------------------------
+
+# Local tools for sharing drafts with coauthors (not part of the site)
+make_standalone.py
+make_pdf.py
+*_demo.html
+*_all_markets.html
+*.zip
+*.pdf
+
+# Internal planning and tracking notes
+docs/
+build_log.md
+*.tex
+
+# Research data - too large for GitHub, and hosted on Google Drive instead
+iyc_curves_data/
+*.pkl
+*.parquet
+*.csv
+data/
+
+# Temporary files from rendering and checks
+_*.html
+_*.py
+_*.svg
+
+# Editor, agent and OS clutter
+.claude/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
