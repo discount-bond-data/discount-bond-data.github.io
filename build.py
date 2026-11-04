@@ -3,15 +3,12 @@
 import os, html, json
 
 # ---------------------------------------------------------------- launch switches
-# Flip both of these when the site goes live, then re-run: python3 build.py
-NOINDEX = True          # True while the site is a test build - keeps it out of Google.
-GA_MEASUREMENT_ID = ""  # e.g. "G-XXXXXXXXXX". Empty = no analytics emitted.
-
-# ---------------------------------------------------------------- site settings
+# The site is live. Keep all four as they are: NOINDEX = True would drop the
+# site out of Google again, and an empty GA id would drop analytics.
 NOINDEX = False
 GA_MEASUREMENT_ID = "G-JNSBW1CKXE"
 CONTACT_EMAIL = "mpelger@stanford.edu"
-SITE_UPDATED  = "November 2026"
+SITE_UPDATED  = "November 2026"   # set to the current month on every rebuild.
 # ---------------------------------------------------------------------------------
 
 NAV = [("index.html","Home"),("united-states.html","United States"),("germany.html","Germany"),
@@ -325,7 +322,7 @@ COUNTRIES = {
  "japan":          dict(name="Japan",          adj="Japanese",
                         kr=("March 22, 1988",    "8,575"), krt=("January 4, 1989",   "8,071"),
                         max_day="14,731", max_year="40.4", max_month="484"),
- "united-kingdom": dict(name="United Kingdom", adj="U.K.",
+ "united-kingdom": dict(name="United Kingdom", prose="the United Kingdom", adj="U.K.",
                         kr=("July 1, 1987",      "9,018"), krt=("July 1, 1987",      "8,739"),
                         max_day="20,115", max_year="55.1", max_month="661"),
  "canada":         dict(name="Canada",         adj="Canadian",
@@ -584,11 +581,11 @@ home = f"""    <p>This website provides government zero-coupon yield curve estim
     incorporate information from U.S. Treasury and foreign-exchange markets. The United States page also
     provides discount bond returns, term structure factors, and bond market condition measures.</p>
 
-    <p class="statement">Across all six markets, we show in an extensive empirical study that our method
-    strongly dominates all parametric and non-parametric benchmarks. Our method achieves substantially
-    smaller out-of-sample yield and pricing errors, while being robust to outliers and data selection
-    choices. We attribute the superior performance to the optimal trade-off between flexibility and
-    smoothness, which positions our method as the new standard for yield curve estimation.</p>
+    <p class="statement">Across all six markets, our method dominates the Nelson-Siegel-Svensson
+    benchmark used by many central banks in extensive out-of-sample comparisons, and for US Treasuries
+    it also dominates all nonparametric benchmarks. It achieves substantially smaller out-of-sample
+    yield and pricing errors while being robust to outliers and data selection choices. We attribute
+    the superior performance to the optimal trade-off between flexibility and smoothness.</p>
 
     <h2>Data by country</h2>
 {country_cards()}
@@ -661,7 +658,7 @@ pages = {"index.html": ("Discount Bond Database", home)}
 for slug, c in COUNTRIES.items():
     kr_start, kr_n = c["kr"]; krt_start, krt_n = c["krt"]
     body = f"""    <h1 class="page">{c['name']}</h1>
-    <p class="lede">Government zero-coupon yield curve estimates for {c['name']}.</p>
+    <p class="lede">Government zero-coupon yield curve estimates for {c.get('prose', c['name'])}.</p>
 
     <div class="glance">
       <span class="glance-label">At a glance</span>
@@ -1050,7 +1047,8 @@ meth = """    <h1 class="page">Data Documentation &amp; Code</h1>
     <div class="pagenav">
       <div class="nrow"><span class="lab">Data docs</span>
         <span class="items"><a href="#conventions">Conventions</a> &middot;
-        <a href="#sources">Sources &amp; sample construction</a></span></div>
+        <a href="#sources">Sources &amp; sample construction</a> &middot;
+        <a href="#updates">Updates</a></span></div>
       <div class="nrow"><span class="lab">Reference</span>
         <span class="items"><a href="#code">Code</a> &middot;
         <a href="#cite">Papers &amp; citations</a></span></div>
@@ -1147,6 +1145,25 @@ meth = """    <h1 class="page">Data Documentation &amp; Code</h1>
         </ul>
       </div>
     </details>
+
+    <h2 id="updates">Updates</h2>
+    <p>The database is updated quarterly. Each update extends the yield curve panels to the most recent
+    quarter end, applies the same estimation parameters and data filters as the published paper, and
+    leaves previously published values unchanged. Corrections, if any, are listed in the release history
+    below.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Dataset</th><th>Data through</th><th>Released</th></tr></thead>
+        <tbody>
+          <tr><td>International KR and KR-T yields, five markets, and bond coverage files</td>
+              <td>2023-03-31</td><td>October 2026</td></tr>
+          <tr><td>U.S. KR yields, new file layout</td>
+              <td>2025-06-30</td><td>October 2026</td></tr>
+          <tr><td>U.S. discount bond returns, term structure factors, and bond market condition
+              measures</td><td>2025-06-27</td><td>October 2025</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <h2 id="code">Code</h2>
     <div class="files">
