@@ -8,8 +8,10 @@ NOINDEX = True          # True while the site is a test build - keeps it out of 
 GA_MEASUREMENT_ID = ""  # e.g. "G-XXXXXXXXXX". Empty = no analytics emitted.
 
 # ---------------------------------------------------------------- site settings
-CONTACT_EMAIL = "mpelger@stanford.edu"  # shown in the shared footer.
-SITE_UPDATED  = ""      # e.g. "September 2026"; empty = the footer shows no date.
+NOINDEX = False
+GA_MEASUREMENT_ID = "G-JNSBW1CKXE"
+CONTACT_EMAIL = "mpelger@stanford.edu"
+SITE_UPDATED  = "November 2026"
 # ---------------------------------------------------------------------------------
 
 NAV = [("index.html","Home"),("united-states.html","United States"),("germany.html","Germany"),
